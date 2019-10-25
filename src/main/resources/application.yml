@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: hdvon_data_sync
+  profiles:
+    active: dev
+
+logging:
+  level:
+    com:
+      hdvon: DEBUG
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml

@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: hdvon_data_sync
+  datasource:
+      # 使用druid数据源
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://192.168.2.120:3306/iomp?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Hongkong
+      username: root
+      password: root
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
+server:
+  port: 8192
+
+#本地程序canal配置，程序支持检测集群配置
+hdvon:
+  canal:
+     canal-host-ip: 192.168.2.130
+     canal-host-port: 11111
+     destination: example
+     username:
+     password:
+     sync-database: t120
+     sync-tables: act_event_log,act_ge_bytearray,act_hi_identitylink,act_hi_taskinst,act_hi_procinst,act_ru_execution,act_ru_identitylink,act_ru_task,act_ru_variable,diagnosis_work_order,diagnosis_work_order_assignee,diagnosis_work_order_attention,diagnosis_work_order_attention_user,diagnosis_work_order_comment,work_order_comment_history
+
+
+task:
+  #写文件名格式,最好配置粒度小一点，建议至少精确到秒，否则可能因为定时写文件粒度大于文件名的时间粒度，造成文件的覆盖现象
+  filename-date-pattern: yyyyMMddHHmmss
+  #写文件定时任务配置
+  write:
+    #每五分钟写一次文件
+    schedule-corn: 0 0/5 * * * ?
+    #临时写文件目录
+    file-dir: /data/sync/write/fileDir
+    #本地写备份目录
+    sync-back-file-dir: /data/sync/write/syncBackFileDir
+    #本地同步写目录，python监控，发送给远程FTP
+    sync-file-dir: /data/sync/write/syncFileDir
+  #同步数据写入mysql任务配置
+  read:
+    #每五分钟读一次文件
+    schedule-corn: 0 0/5 * * * ?
+    #读文件目录,python从远程FTP拉取的文件
+    remote-sync-file-dir: /data/sync/read/remoteSyncFileDir
+    #从远程网络同步过来入库成功之后，文件备份的目录
+    remote-back-file-dir: /data/sync/read/remoteBackFileDir
+    #从远程网络同步过来入库失败之后，文件备份的目录
+    remote-fail-back-file-dir: /data/sync/read/remoteFailBackFileDir
+
+logging:
+  level:
+    com:
+      hdvon: DEBUG
+
+
+
