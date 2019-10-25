@@ -1,0 +1,18 @@
+canal主要功能进行解析mysql的binlog日志，原理就是模拟mysql slave向mysql master发送dump协议，mysql master收到dump协议请求之后就会推送binlog日志给canal，canal内部解析binlog日志，转换为自己的类。
+
+
+1.在my.ini文件加入:
+[mysqld]  
+log-bin=mysql-bin #添加这一行就ok  
+binlog-format=ROW #选择row模式  
+server_id=1 #配置mysql replaction需要定义，不能和canal的slaveId重复  
+
+2. canal的原理是基于mysql binlog技术，所以这里一定需要开启mysql的binlog写入功能，并且配置binlog模式为row.
+ show variables like 'binlog_format';
+ show variables like 'log_bin';
+
+2.canal的原理是模拟自己为mysql slave，所以这里一定需要做为mysql slave的相关权限 
+CREATE USER canal IDENTIFIED BY 'canal';    
+GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'canal'@'%';  
+-- GRANT ALL PRIVILEGES ON *.* TO 'canal'@'%' ;  
+FLUSH PRIVILEGES; 

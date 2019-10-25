@@ -1,0 +1,8 @@
+CREATE USER 'root'@'%' IDENTIFIED BY 'root';
+GRANT all  privileges ON *.* TO 'root'@'%';
+flush privileges;
+
+启动pipline报错：pid:2 nid:1 exception:canal:test_local_canal:com.alibaba.otter.canal.parse.exception.CanalParseException: command : 'show master status' has an error! pls check. you need (at least one of) the SUPER,REPLICATION CLIENT privilege(s) for this operation
+grant REPLICATION CLIENT ON *.* TO 'root'@'%';
+grant SUPER ON *.* TO 'root'@'%';
+flush privileges;

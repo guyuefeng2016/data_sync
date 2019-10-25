@@ -1,0 +1,47 @@
+1.下载 canal
+wget https://github.com/alibaba/canal/releases/download/canal-1.0.17/canal.deployer-1.0.17.tar.gz
+或者去github官网https://github.com/alibaba/canal/wiki/QuickStart下载
+
+2.解压缩
+tar -zxvf tar.gz -C /tmp/canal
+
+3.修改conf目录里面的example目录的instance.properties
+
+## mysql serverId，每一个实例都要不一样  ====》
+canal.instance.mysql.slaveId = 1234
+#position info，需要改成自己的数据库信息  ====》
+canal.instance.master.address = 192.168.2.120:3306
+canal.instance.master.journal.name = 
+canal.instance.master.position = 
+canal.instance.master.timestamp = 
+#canal.instance.standby.address = 
+#canal.instance.standby.journal.name =
+#canal.instance.standby.position = 
+#canal.instance.standby.timestamp = 
+#username/password，需要改成自己的数据库信息  ====》
+canal.instance.dbUsername = canal  
+canal.instance.dbPassword = canal
+canal.instance.defaultDatabaseName =
+canal.instance.connectionCharset = UTF-8
+#table regex，默认是监听所有的数据库和表的信息，这里也可以在程序里面拦截
+canal.instance.filter.regex = .\*\\\\..\*
+
+4.修改conf目录下的canal.properties 
+#每一个canal集群里面服务器的id都不一样
+canal.id = 1
+#canal运行的机器的ip
+canal.ip = 192.168.2.130
+#暴露出去的端口
+canal.port = 11111
+canal.metrics.pull.port = 11112
+#如果机器是单核CPU就改成false
+canal.instance.parser.parallel = true
+
+5.启动
+bin/startup.sh
+
+6.查看server日志，看是否启动成功
+vi logs/canal/canal.log
+
+7.查看 instance 的日志
+vi logs/example/example.log

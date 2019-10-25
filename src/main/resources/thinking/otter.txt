@@ -1,0 +1,1 @@
+otter依赖canal进行解析binlog日志
